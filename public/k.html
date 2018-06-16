@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no,user-scalable=no">
+    <title>Document</title>
+</head>
+<body>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+</style>
+<canvas id="canvas1" style="zoom:0.5;background-color:#20212b;"></canvas>
+<script src="./jquery.min.js"></script>
+<script src="./lmd.js"></script>
+<script src="./hammer-min.js"></script>
+<script src="./jquery.signalR-2.2.3.min.js"></script>
+<script src="http://47.96.146.155:1817/signalr/hubs"></script>
+<!-- <script src="./k2-old.js"></script> -->
+<script src="./k2.js"></script>
+<!-- <script src="./k1.js"></script> -->
+
+<script>
+    var work = $.connection.myHub;
+    // $.connection.hub.url = 'http://139.196.236.139:1818/lcc';
+    $.connection.hub.url = 'http://47.96.146.155:1817/lcc';
+    work.client.kdata = function (data) {
+        try {
+            a.getdata(eval("(" + data + ")"));
+        } catch (err) {
+
+        }
+    };
+    var type = GetRequest().type;
+    var a = new Kline();
+    if(type == 0){
+        type = "分时"
+    }
+    if(type == 1){
+        type = "1分钟"
+    }
+    if(type == 2){
+        type = "5分钟"
+    }
+    if(type == 3){
+        type = "15分钟"
+    }
+    if(type == 4){
+        type = "30分钟"
+    }
+    if(type == 5){
+        type = "60分钟"
+    }
+    // a.宽 = document.body.clientWidth;
+    a.宽 = window.screen.width;
+    // a.高 = window.screen.height * 240 / 568;
+    // a.高 = document.documentElement.clientHeight -87-81-143 -16;
+    a.高 = window.screen.height -87-81-143 -16;
+    a.画布id = "canvas1";
+    a.上边距 = 40;
+    a.类型 = type;
+    a.代码 ="sc1809";
+    a.定时 =300;
+    a.go();
+    function GetRequest() {
+        var url = location.search; //获取url中"?"符后的字串
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for(var i = 0; i < strs.length; i ++) {
+                theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
+</script>
+</body>
+</html>
