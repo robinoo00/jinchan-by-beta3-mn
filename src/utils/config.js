@@ -1,5 +1,5 @@
 export default {
-    server:'http://139.196.236.139:1220/',
+    server:'http://47.100.123.216:1220/',
     KEY:'key',
     K_DATA_LIST:'k_data_list',
     ACCOUNT:'account',
