@@ -66,3 +66,14 @@ export function getHistoryList(values){
     })
 }
 
+//止损止盈(持仓)
+export function limitEarn(values){
+  return request(config.server + 'appapi/setstop',{
+    method:'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+    },
+    body:values
+  })
+}
+

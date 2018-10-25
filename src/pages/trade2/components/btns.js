@@ -59,6 +59,7 @@ class Btns extends React.Component {
 }
 
 const mapStateToProps = state => ({
+    data:state.trade2.price_data,
     buy_num: state.trade2.buy_num,
     sell_num: state.trade2.sell_num,
     no_trade: state.trade2.no_trade,

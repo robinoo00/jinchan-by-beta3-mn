@@ -1,10 +1,9 @@
 import CSSModules from 'react-css-modules'
-import styles from '../styles/price.less'
+import styles from '../styles/trade.css'
 import React from 'react'
 import {Toast} from 'antd-mobile'
 import Btns from './btns'
 import config from "../../../utils/config";
-import {connect} from 'dva'
 
 let id = 0
 
@@ -44,15 +43,13 @@ class Price extends React.Component{
     componentWillUnmount() {
         clearInterval(id);
     }
-    assignData = (resource) => {
+    assignData(resource){
         const code =sessionStorage.getItem(config.TRADE_CODE);
         const list = JSON.parse(resource);
         const data = list.filter(item => item.合约 === code)[0];
-        const {assignPriceData} = this.props;
-        assignPriceData(data);
-        // this.setState({
-        //     data:data
-        // })
+        this.setState({
+            data:data
+        })
     }
     assignList(data){
         this.setState({
@@ -60,7 +57,7 @@ class Price extends React.Component{
         })
     }
     render(){
-        const {data} = this.props;
+        const {data,list} = this.state;
         return(
             <div>
                 <div styleName="price-detail">
@@ -79,23 +76,11 @@ class Price extends React.Component{
                         <div styleName="detail-right-item">{data.最新价}</div>
                     </div>
                 </div>
+                <Btns data={data}/>
             </div>
         )
     }
 }
 
-const mapStateToProps = state => ({
-    data:state.trade2.price_data
-})
-
-const mapDispatchToProps = dispatch => ({
-    assignPriceData: data => {
-        dispatch({
-            type:'trade2/assignPriceData',
-            data:data
-        })
-    }
-})
-
-export default connect(mapStateToProps,mapDispatchToProps)(CSSModules(Price, styles))
+export default CSSModules(Price, styles)
 

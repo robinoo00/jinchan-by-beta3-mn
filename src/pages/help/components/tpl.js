@@ -29,7 +29,7 @@ class Help extends React.Component{
                 <Header
                     title={'客服中心'}
                     leftCallBack={() => {router.goBack()}}
-                    // rightText={<a href={"tel:"+config.SERVICE_TEL}><img alt={""} style={{width:'.2rem'}} src={icon}/></a>}
+                    rightText={<a href={"tel:"+config.SERVICE_TEL}><img alt={""} style={{width:'.2rem'}} src={icon}/></a>}
                 />
                 <WhiteSpace size={"md"}/>
                 <List

@@ -16,6 +16,7 @@ export default {
         sell_num: 0,
         limit_price: 0,
         no_trade: false,//非交易时间段
+        price_data: {}
     },
     subscriptions: {
         setup({dispatch, history}) {
@@ -66,7 +67,13 @@ export default {
                         // text = '交易失败';
                         // Toast.info('交易失败');
                     } else {
-                        window.toast(data.信息)
+                        if(data.止){
+                            Modal.alert('下单成功','止损止盈已清空，请重新设置',[
+                                {text:'我知道了',onPress:()=>{}}
+                            ])
+                        }else{
+                            window.toast(data.信息)
+                        }
                         // Toast.info(data.信息)
                     }
                 } else {
@@ -175,6 +182,12 @@ export default {
     },
 
     reducers: {
+        assignPriceData(state,{data}){
+          return {
+              ...state,
+              price_data:{...data}
+          }
+        },
         assignLimitPirce(state, {price}) {
             return {
                 ...state,

@@ -16,7 +16,19 @@ export default {
         history_list: [],
         earn: 0,
         clear_time: '',
-        history_date: ''//历史事件选择
+        history_date: '',//历史事件选择
+        limit_earn: {
+          inputs:[
+            {
+              text:'止损点数',placeholder:'请输入止损点数',name:'tickLoss'
+            },
+            {
+              text:'止赢点数',placeholder:'请输入止赢点数',name:'tickProfit'
+            },
+          ],
+          data:{},
+          visible:false
+        }
     },
     subscriptions: {
         setup({dispatch, history}) {
@@ -135,6 +147,26 @@ export default {
                 date: date
             })
         },
+        *limitEarn({tickProfit=0,tickLoss=0},{call,select}){
+          const item = yield select(state => state.tradeList.limit_earn.data)
+          const post_data = {
+            instrument:item[2],
+            direction:item[3],
+            profit:tickProfit,
+            loss:tickLoss,
+            type:1
+          }
+          const {data} = yield call(TradeListServices.limitEarn,post_data)
+          console.log(data);
+          if(data){
+            if(data.id == 0){
+              window.toast('设置成功')
+            }else{
+              window.toast('设置失败')
+            }
+            // Toast.info(data.信息,1);
+          }
+        }
     },
 
     reducers: {
@@ -185,7 +217,26 @@ export default {
                 history_list: [...data],
                 history_date: date,
             }
-        }
+        },
+        showLimitEarn(state, {data}){
+          return {
+            ...state,
+            limit_earn:{
+              ...state.limit_earn,
+              data:data,
+              visible:true
+            }
+          }
+        },
+        hideLimitEarn(state,{}){
+          return {
+            ...state,
+            limit_earn:{
+              ...state.limit_earn,
+              visible:false
+            }
+          }
+        },
     },
 
 };

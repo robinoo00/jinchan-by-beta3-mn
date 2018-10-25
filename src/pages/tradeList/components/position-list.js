@@ -3,7 +3,9 @@ import styles from '../styles/tpl.css'
 import {connect} from 'dva'
 import React from 'react'
 import Button from '../../../components/button/button'
-import {Modal,Toast} from 'antd-mobile'
+import {Modal, Toast} from 'antd-mobile'
+import LimitEarn from './limit-earn'
+import router from 'umi/router'
 
 const alert = Modal.alert;
 let id = 0;
@@ -19,9 +21,10 @@ class Example extends React.Component {
     }
 
     render() {
-        const {list, ping, earn, pingAll} = this.props;
+        const {list, ping, earn, pingAll, limitLose} = this.props;
         return (
             <div>
+                <LimitEarn/>
                 {list.map((item, index) => (
                     <div key={"position_item_" + index} styleName="trade-wrap">
                         <ul styleName="row-1">
@@ -48,11 +51,14 @@ class Example extends React.Component {
                                 <li styleName="fr" style={{paddingTop: '.15rem'}}>
                                     <div styleName="state-blue" onClick={ping(item['3'], item['2'], item['4'])}>平仓</div>
                                 </li>
+                                <li styleName="fr" style={{paddingTop: '.15rem', marginRight: '10px'}}>
+                                    <div styleName="state-blue" onClick={limitLose(item)}>损盈</div>
+                                </li>
                             </ul>
                         </div>
                     </div>
                 ))}
-                <div style={{height:'92px'}}>
+                <div style={{height: '92px'}}>
                     <div styleName="mod-sell-footer">
                         <p styleName="txt-wrap">持仓盈亏 <span
                             style={earn < 0 ? {color: '#01B28E'} : {color: '#E34C4D'}}>{earn}</span></p>
@@ -85,8 +91,8 @@ class SellItem extends React.Component {
                     即时平仓
                 </div>
                 {/*<div onClick={this.choose(2)} className={index === 2 ? styles.sell_item_choose : styles.sell_item}>*/}
-                    {/*<p>即时卖出</p>*/}
-                    {/*<p>马上<span style={{color: '#01B28E'}}>看跌</span></p>*/}
+                {/*<p>即时卖出</p>*/}
+                {/*<p>马上<span style={{color: '#01B28E'}}>看跌</span></p>*/}
                 {/*</div>*/}
             </div>
         )
@@ -98,9 +104,9 @@ let sell_all_index = 1;
 class SellAll extends React.Component {
     state = {
         index: 1,
-        num_all:0,
-        num_buy:0,
-        num_sell:0
+        num_all: 0,
+        num_buy: 0,
+        num_sell: 0
     }
     choose = index => () => {
         sell_all_index = index;
@@ -108,22 +114,23 @@ class SellAll extends React.Component {
             index: index
         })
     }
-    componentWillMount(){
+
+    componentWillMount() {
         const list = this.props.list;
         let num_buy = this.state.num_buy;
         let num_sell = this.state.num_sell;
-        for(let item of list){
-            if(item['3'] === 0){
-                num_buy ++
+        for (let item of list) {
+            if (item['3'] === 0) {
+                num_buy++
             }
-            if(item['3'] === 1){
-                num_sell ++
+            if (item['3'] === 1) {
+                num_sell++
             }
         }
         this.setState({
-            num_all:list.length,
-            num_buy:num_buy,
-            num_sell:num_sell
+            num_all: list.length,
+            num_buy: num_buy,
+            num_sell: num_sell
         })
     }
 
@@ -139,11 +146,11 @@ class SellAll extends React.Component {
                     {this.state.num_buy != 0 ? <li onClick={this.choose(2)}>
                         <span className={index === 2 ? styles.all_sell_checked : styles.all_sell_check}></span>
                         <span><span style={{color: '#E34C4D'}}>买入共{this.state.num_buy}笔</span> &gt; 全部即时平仓</span>
-                    </li>: ''}
+                    </li> : ''}
                     {this.state.num_sell != 0 ? <li onClick={this.choose(3)}>
                         <span className={index === 3 ? styles.all_sell_checked : styles.all_sell_check}></span>
                         <span><span style={{color: '#01B28E'}}>卖出共{this.state.num_sell}笔</span> &gt; 全部即时平仓</span>
-                    </li>: ''}
+                    </li> : ''}
                 </ul>
             </div>
         )
@@ -157,7 +164,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, props) => ({
     pingAll: list => () => {
-        if(list.length != 0 ){
+        if (list.length != 0) {
             alert('', <SellAll list={list}/>, [
                 {
                     text: '取消', onPress: () => {
@@ -174,19 +181,19 @@ const mapDispatchToProps = (dispatch, props) => ({
                         if (sell_all_index === 2) {
                             dispatch({
                                 type: 'tradeList/pingAll',
-                                direction:0
+                                direction: 0
                             })
                         }
                         if (sell_all_index === 3) {
                             dispatch({
                                 type: 'tradeList/pingAll',
-                                direction:1
+                                direction: 1
                             })
                         }
                     }
                 }
             ])
-        }else{
+        } else {
             Toast.info('还未持仓')
         }
     },
@@ -221,7 +228,20 @@ const mapDispatchToProps = (dispatch, props) => ({
         dispatch({
             type: 'tradeList/getPositionList'
         })
-    }
+    },
+    limitLose: item => () => {
+        // console.log(item);
+        // router.push('limits')
+        dispatch({
+            type:'limits/assignTempData',
+            data:item
+        })
+        router.push({pathname:'limits',query:{code:item[2]}})
+        // dispatch({
+        //     type: 'tradeList/showLimitEarn',
+        //     data: item
+        // })
+    },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CSSModules(Example, styles))

@@ -7,7 +7,7 @@ import config from "../../../utils/config";
 
 const draw = new Draw();
 var work = window.$.connection.myHub;
-window.$.connection.hub.url = 'http://139.196.236.139:1818/lcc';
+window.$.connection.hub.url = 'http://47.100.123.216:1218/lcc';
 function chooseKType(code,type){
     window.$.connection.hub.start().done(function () {
         work.server.k线(code, type, "");

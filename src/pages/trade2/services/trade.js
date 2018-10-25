@@ -15,7 +15,7 @@ import config from '../../../utils/config'
 * */
 export function order(values){
     console.log(values);
-    return request(config.server + 'appapi/order',{
+    return request(config.server + 'appapi/ordera',{
         method:'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',

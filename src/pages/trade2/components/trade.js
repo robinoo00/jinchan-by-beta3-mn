@@ -9,6 +9,8 @@ import {connect} from 'dva'
 import {Toast} from 'antd-mobile'
 import Detail from './detail'
 import Nav from './nav'
+import Btn from './btns'
+// import LimitEarn from './limit-earn'
 
 let id = 0;
 
@@ -22,6 +24,8 @@ const Trade = () => (
             <Detail/>
             <Operation/>
             <Pirce/>
+            {/*<LimitEarn/>*/}
+            <Btn/>
         </div>
     </div>
 )
